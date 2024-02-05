@@ -45,6 +45,22 @@ const getPlaceByUserId = async (req, res, next) => {
   res.json({ place });
 };
 
+const getPlacesByUserId = async (req, res, next) => {
+  const userId = req.params.uid;
+
+  const places = DUMMY_PLACES.filter((p) => {
+    return p.creator === userId;
+  });
+
+  if (places.length === 0) {
+    return next(
+      new HttpError("Could not find places for the provided user id.", 404),
+    );
+  }
+
+  res.json({ places });
+};
+
 const createPlace = async (req, res, next) => {
   const { title, description, coordinates, address, creator } = req.body;
 
@@ -83,7 +99,7 @@ const deletePlace = async (req, res) => {
 };
 
 exports.getPlaceById = getPlaceById;
-exports.getPlaceByUserId = getPlaceByUserId;
+exports.getPlacesByUserId = getPlacesByUserId;
 exports.createPlace = createPlace;
 exports.updatePlace = updatePlace;
 exports.deletePlace = deletePlace;
